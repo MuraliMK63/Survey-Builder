@@ -23,9 +23,12 @@ class AddUserView(generics.GenericAPIView):
         deserializer = self.serializer_class(data = request.data)
         deserializer.is_valid(raise_exception = True)
 
-        username, password, firstname, lastname, role = deserializer.validated_data.values()
+        username, password, firstname, lastname = deserializer.validated_data.values()
         enc_password = encrypt(password)
-        UserAccount.objects.create(username = username, password = enc_password, firstname = firstname, lastname = lastname, role = role)
+        user = UserAccount.objects.filter(username = username)
+        if user:
+            return Response('Username already taken')
+        UserAccount.objects.create(username = username, password = enc_password, firstname = firstname, lastname = lastname, role = 'User')
         return Response('User Created.', status = status.HTTP_201_CREATED)
     
 class VerifyUserView(generics.GenericAPIView):
@@ -39,6 +42,6 @@ class VerifyUserView(generics.GenericAPIView):
         enc_password = encrypt(password)
         user = UserAccount.objects.filter(username = username, password = enc_password)
         if user:
-            return Response('Valid user.')
+            return Response(user.values().first())
         else:
             return Response("Invalid user.")

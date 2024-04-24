@@ -22,7 +22,7 @@ export default function SignUp() {
             toast.error('Passwords Should Be Same')
         }
         else {
-            let payload = { username: username, password: password, firstname: firstname, lastname: lastname, role: 'user' };
+            let payload = { username: username, password: password, firstname: firstname, lastname: lastname };
             loginService.addNewUser(payload)
                 .then((res) => {
                     if (res.data === 'User Created.') {
@@ -47,7 +47,7 @@ export default function SignUp() {
             <form onSubmit={formHandler}>
                 <div className="mb-3">
                     <label htmlFor="userName" className="form-label">User Name </label>
-                    <input type="text" className="form-control" id="userName" aria-describedby="emailHelp" required />
+                    <input type="email" className="form-control" id="userName" aria-describedby="emailHelp" required />
                 </div>
                 <div className="row">
                     <div className="mb-3 col">
@@ -60,12 +60,12 @@ export default function SignUp() {
                     </div>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Password</label>
-                    <input type="password" className="form-control" id="password" required />
+                    <label htmlFor="password"  className="form-label">Password <span className="text-muted">(8 characters required)</span></label>
+                    <input type="password" pattern=".{8,}" className="form-control" id="password" required />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-                    <input type="password" className="form-control" id="confirmPassword" required />
+                    <input type="password" pattern=".{8,}" className="form-control" id="confirmPassword" required />
                 </div>
                 <div id="emailHelp" className="form-text mb-4">
                     Already Registered? <Link to='/' className="text-decoration-none">Log in</Link>

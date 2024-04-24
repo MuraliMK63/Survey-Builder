@@ -11,7 +11,7 @@ load_dotenv()
  
 BLOCK_SIZE = 16
 pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
-unpad = lambda s: s[:-ord(s[len(s) - 1:])]
+unpadd = lambda s: s[:-ord(s[len(s) - 1:])]
  
  
 def encrypt(raw):
@@ -27,9 +27,8 @@ def decrypt(enc):
     enc = base64.b64decode(enc)
     # iv = enc[:16]
     cipher = AES.new(private_key, AES.MODE_ECB)
-    return unpad(cipher.decrypt(enc)).decode()
- 
- 
+    return unpadd(cipher.decrypt(enc)).decode()
+
 # # First let us encrypt secret message
 # encrypted = encrypt("This is a secret message")
 # print(encrypted)
@@ -37,4 +36,3 @@ def decrypt(enc):
 # Let us decrypt using our original password
 # decrypted = decrypt(encrypted)
 # print(decrypted)
-

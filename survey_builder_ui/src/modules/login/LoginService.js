@@ -5,11 +5,11 @@ const apiService = new ApiService();
 class LoginService{
 
     verifyUser(data){
-        return apiService.post('useraccount/verifyUser/', data)
+        return apiService.post('auth/verifyUser/', data)
     }
 
     addNewUser(data){
-        return apiService.post('useraccount/addUser/', data)
+        return apiService.post('auth/addUser/', data)
     }
 
 };

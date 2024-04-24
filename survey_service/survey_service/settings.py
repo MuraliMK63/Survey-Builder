@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-ms*+eej8ulu!&h8s4yu!kr+a85k#79e5!%ya9g-+v5f1v343mo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.10', '127.0.0.1']
 
 
 # Application definition
@@ -45,12 +45,15 @@ INSTALLED_APPS = [
     ## Third Party Packages
     'rest_framework',
     'drf_yasg',
+    'corsheaders',
 
     ## Custom Apps
     'authentication',
+    'survey'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -59,6 +62,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'survey_service.urls'
 
@@ -123,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 

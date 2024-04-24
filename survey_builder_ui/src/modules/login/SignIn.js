@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import LoginService from "./LoginService";
 
+
 const loginService = new LoginService();
 
 export default function SignIn() {
@@ -23,9 +24,16 @@ export default function SignIn() {
         let payload = { username: username, password: password };
         loginService.verifyUser(payload)
             .then((res) => {
-                if (res.data === 'Valid User.') {
-                    navigate('admin ');
+                if (res.data.role === 'Admin') {
+                    localStorage.setItem('userid',  res.data.id)
+                    localStorage.setItem('username', res.data.username)
+                    navigate('admin');
                 }
+                else if (res.data.role === 'User'){
+                    localStorage.setItem('userid',  res.data.id)
+                    localStorage.setItem('username', res.data.username)
+                    navigate('user')
+                } 
                 else {
                     toast.error(res.data);
                 }
@@ -46,7 +54,7 @@ export default function SignIn() {
             <form onSubmit={formHandler}>
                 <div className="mb-4">
                     <label htmlFor="userName" className="form-label">User Name</label>
-                    <input type="text" className="form-control" id="userName" required />
+                    <input type="email" className="form-control" id="userName" required />
                     <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
                 </div>
                 <div className="mb-4">
