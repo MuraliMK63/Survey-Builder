@@ -20,3 +20,7 @@ class GetSurveyCodeSerializer(serializers.Serializer):
 
 class SurveyIdSerializer(serializers.Serializer):
     surveyId = serializers.CharField()
+
+class SaveSurveySerializer(SurveyIdSerializer):
+    surveyJson = serializers.JSONField()
+

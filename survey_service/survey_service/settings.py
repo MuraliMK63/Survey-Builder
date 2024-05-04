@@ -49,7 +49,8 @@ INSTALLED_APPS = [
 
     ## Custom Apps
     'authentication',
-    'survey'
+    'survey',
+    'dashboard',
 ]
 
 MIDDLEWARE = [

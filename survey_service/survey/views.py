@@ -2,10 +2,11 @@ from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.db.models import Count, F
 
 import json
 
-from .serializers import AddCategorySerializer, AddSurveySerializer, GetSurveyCodeSerializer, SurveyIdSerializer
+from .serializers import AddCategorySerializer, AddSurveySerializer, GetSurveyCodeSerializer, SurveyIdSerializer, SaveSurveySerializer
 from .models import Survey, Category
 
 # Create your views here.
@@ -78,3 +79,20 @@ class GetSurveyDetailsView(generics.GenericAPIView):
             return Response('No survey found!')
         else:
             return Response(survey.first().content)
+        
+class SaveSurveyView(generics.GenericAPIView):
+    serializer_class = SaveSurveySerializer
+
+    def post(self, request):
+        deserializer = self.serializer_class(data = request.data)
+        deserializer.is_valid(raise_exception = True)
+
+        survey_id, survey_json = deserializer.validated_data.values()
+        survey = Survey.objects.filter(id = survey_id)
+        if not survey:
+            return Response('No Survey Found!')
+        else:
+            current_survey = survey.first()
+            current_survey.content = survey_json
+            current_survey.save()
+            return Response('Saved Sucessfully!')

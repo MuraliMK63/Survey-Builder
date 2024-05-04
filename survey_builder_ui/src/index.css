@@ -16,3 +16,7 @@ code {
 html{
   background-color: #dbdad7;
 }
+
+.surveyCard:hover{
+  background-color: #81b4a5;
+}

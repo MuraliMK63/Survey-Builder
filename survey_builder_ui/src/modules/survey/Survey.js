@@ -23,29 +23,36 @@ export default function Survey() {
     const activate = () => { setCurrentOption(0) };
     const deactivate = () => { setCurrentOption(1) };
 
+    const showSurvey = (e) =>{
+        let surveyId = e.target.value
+        navigate(`createSurvey/${surveyId}`)
+    }
+
     let currentSection = currentOption === 0 ? 'Active Surveys' : 'Inactive Surveys'
 
-    const activeSurveys = active.map((activ) => {
+    const activeSurveys = active.map((activ, ind) => {
         return <>
-            <tr key={active.id}>
+            <tr key={activ.id}  >
                 <td><input type="checkbox" className="form-check-input" id="activeCheck" /></td>
+                <td value={activ.id}>{ind + 1}</td>
                 <td>{activ.name}</td>
                 <td>{activ.code}</td>
                 <td>{activ.description}</td>
-                <td><small><button className="btn btn-sm btn-primary">Deactivate</button></small></td>
+                <td><small><button className="btn btn-sm btn-primary" value={activ.id} onClick={showSurvey} >Edit</button></small></td>
             </tr>
         </>
 
     })
 
-    const InactiveSurveys = inactive.map((inactiv) => {
+    const InactiveSurveys = inactive.map((inactiv, ind) => {
         return <>
-            <tr key={inactive.id} >
+            <tr key={inactiv.id} >
                 <td><input type="checkbox" className="form-check-input" id="inactiveCheck" /></td>
+                <td value={inactiv.id}>{ind + 1}</td>
                 <td>{inactiv.name}</td>
                 <td>{inactiv.code}</td>
                 <td>{inactiv.description}</td>
-                <td><small><button className="btn btn-sm btn-primary">Deactivate</button></small></td>
+                <td><small><button className="btn btn-md btn-primary" value={inactiv.id} onClick={showSurvey} >Edit</button></small></td>
             </tr>
         </>
 
@@ -70,11 +77,12 @@ export default function Survey() {
                             onClick={deactivate}>Inactive Surveys</h5>
                     </div>
                     <div className="w-100 h-75 bg-white rounded p-2" >
-                        <div className="w-100 h-100 rounded p-2" style={{ backgroundColor: '#dbdad7' }}>
+                        <div className="w-100 h-100 overflow-auto rounded p-2" style={{ backgroundColor: '#dbdad7' }}>
                             <table className="table table-hover">
                                 <thead>
                                     <tr>
                                         <td>  </td>
+                                        <td>Survey Id</td>
                                         <td>Survey Name</td>
                                         <td>Survey Code</td>
                                         <td>Survey Description</td>

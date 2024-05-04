@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { Flip, ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import QuestionModal from "./QuestionModal";
-import SurveyService from './SurveyService';
 
+import QuestionModal from "./QuestionModal";
+import QuestionTypes from "./QuestionTypes";
+
+
+import SurveyService from './SurveyService';
 const surveyService = new SurveyService();
 
 export default function SurveyBuilder() {
@@ -12,6 +15,7 @@ export default function SurveyBuilder() {
     const navigate = useNavigate()
     const [surveyDetails, setSurveyDetails] = useState([])
     const [surveyContent, setSurveyContent] = useState([]);
+
 
     let location = useLocation();
 
@@ -33,13 +37,13 @@ export default function SurveyBuilder() {
 
 
     const saveSurvey = () => {
-        let payload = { surveyId: location.pathname.split('/').pop(), questions: surveyContent }
+        let payload = { surveyId: location.pathname.split('/').pop(), surveyJson: { surveyName: surveyDetails[0], description: surveyDetails[1], elements: surveyContent } }
         surveyService.saveSurvey(payload)
             .then((res) => {
-                if (res.data === 'Saved Sucessfully!'){
-                    toast.success(res.data);
+                if (res.data === 'Saved Sucessfully!') {
+                    toast.success(res.data, { transition: Flip, theme: "colored" });
                 }
-                else{
+                else {
                     toast.error(res.data);
                 }
             })
@@ -47,18 +51,29 @@ export default function SurveyBuilder() {
 
     }
 
+    const deleteQuetion = (quesid) => {
+        let prevContent = [...surveyContent];
+        prevContent.splice(quesid - 1, 1);
+        prevContent.map((ques) => { if (ques.id > quesid){ques.id = ques.id -1}})
+        setSurveyContent(prevContent)
+        
+    }
+
+    const editQuestion = (question) => {
+        let prevContent = [...surveyContent]
+        prevContent = prevContent.map((ques) => ques.id !== question.id ? ques : question)
+        console.log(prevContent)
+        setSurveyContent(prevContent)
+    }
+
     const questionContent = surveyContent.map((ques) => {
-        return <>
-            <div className="bg-white rounded p-3 mb-4">
-                <h5>{ques.questiontext}</h5>
-            </div>
-        </>
+        return <QuestionTypes question={ques} delQ={deleteQuetion} edtQ={editQuestion}/>
     })
 
     return (
         <>
             <ToastContainer />
-            <div className="w-100 h-100 bg-white rounded p-3 overflow-auto">
+            <div className="w-100 h-100 bg-white rounded p-3 ">
                 <div>
                     <div className="d-flex justify-content-between">
                         <h3>{surveyDetails[0]}</h3>

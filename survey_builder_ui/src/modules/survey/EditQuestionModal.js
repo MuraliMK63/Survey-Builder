@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 
-export default function QuestionModal({surveyState, surveySetter}) {
+export default function EditQuestionModal({ question, editQ }) {
+    const [choices, setChoices] = useState(question.options);
+    const [currentType, setCurrentType] = useState(question.type);
 
-    const [choices, setChoices] = useState([1, 2, 3, 4]);
-    const [currentType, setCurrentType] = useState(1);
+
 
     let questionTypes = ['Single Textbox', 'Comment Box', 'Radio Button', 'Check Button', 'Dropdown', 'Slider Scale']
 
@@ -13,22 +14,19 @@ export default function QuestionModal({surveyState, surveySetter}) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        let questionLength = surveyState.length
+        let quesid = question.id;
         let type = e.target.elements[1].value;
         let questiontext = e.target.elements[2].value;
-        let element = {id: questionLength + 1, type: questionTypes[type], questiontext: questiontext, options: []}
-        for (let i = 3; i < e.target.length - 3; i++){
+        let element = {id: quesid, type: type, questiontext: questiontext, options: [] }
+        for (let i = 3; i < e.target.length - 3; i++) {
             element.options.push(e.target.elements[i].value)
         }
-        surveySetter([...surveyState, element]);
-        e.target.reset()
-        setCurrentType(1);
-        setChoices([1, 2, 3, 4])
-        document.getElementById('modalClose').click()
+        editQ(element)
+        document.getElementById('editModalClose').click()
     }
 
     const addChoice = () => {
-        setChoices([...choices, choices.length+1])
+        setChoices([...choices, choices.length + 1])
     }
 
     const removeChoice = () => {
@@ -41,7 +39,7 @@ export default function QuestionModal({surveyState, surveySetter}) {
     const choiceList = choices.map((choice) => {
         return <span className="row">
             <i className="bi bi-dash rounded col-sm-1 mb-3" style={{ backgroundColor: '#dbdad7', cursor: 'pointer' }} onClick={removeChoice}></i>
-            <input type="text" id={choice} name={`choice ${choice}`} className="mb-2 ms-2 me-2 rounded form-control border border-3 col" required></input>
+            <input type="text" id={choice} name={`choice ${choice}`} className="mb-2 ms-2 me-2 rounded form-control border border-3 col" required defaultValue={choice}></input>
             <i className="bi bi-plus rounded col-sm-1 mb-3" style={{ backgroundColor: '#dbdad7', cursor: 'pointer' }} onClick={addChoice}></i>
 
         </span>
@@ -63,13 +61,18 @@ export default function QuestionModal({surveyState, surveySetter}) {
         </div>
     </div>
 
+    const questionTypeDropdown = questionTypes.map((qtype, ind) => {
+        return ((qtype === currentType) ? <option value={qtype} selected>{qtype}</option> : <option value={qtype} >{qtype}</option>)
+    })
+
+
 
 
     return (
-        <div className="modal fade" id="questionModal" data-bs-backdrop="static" data-bs-keyboard="false" >
+        <div className="modal fade" id={`editQuestionModal${question.id}`} data-bs-backdrop="static" data-bs-keyboard="false" >
             <div className="modal-dialog modal-dialog-centered modal-xl">
                 <div className="modal-content">
-                    <form  onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit}>
                         <div className="modal-header">
                             <h1 className="modal-title fs-5" id="exampleModalLabel">Add Question:</h1>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -78,24 +81,19 @@ export default function QuestionModal({surveyState, surveySetter}) {
                             <div className="mb-4">
                                 <label htmlFor="questionType" className="form-label">Question Type:</label>
                                 <select className="form-control border border-3" name="questionType" id="questionType" onChange={quesTypeChanger}>
-                                    <option value={0}>Single Textbox</option>
-                                    <option value={1}>Comment Box</option>
-                                    <option value={2}>Radio Button</option>
-                                    <option value={3}>Check Button</option>
-                                    <option value={4}>Dropdown</option>
-                                    <option value={5}>Slider Scale</option>
+                                    {questionTypeDropdown}
                                 </select>
                             </div>
                             <div className="mt-4">
                                 <label htmlFor="questionText" className="form-label">Question Text:</label>
-                                <textarea className="form-control border border-3" id="questionText" rows={6} required></textarea>
+                                <textarea className="form-control border border-3" id="questionText" rows={6} required defaultValue={question.questiontext}></textarea>
                             </div>
                             <div className="mt-3">
-                                {(currentType) > 1 ? choiceDiv : <p></p>}
+                                {['Single Textbox', 'Comment Box'].includes(currentType) ? <p></p> : choiceDiv}
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" id='modalClose'>Close</button>
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" id='editModalClose'>Close</button>
                             <button type="submit" className="btn btn-primary">Add Question</button>
                         </div>
                     </form>

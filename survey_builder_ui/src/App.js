@@ -12,7 +12,6 @@ import AdminHome from './components/AdminHome';
 import DashBoard from './modules/dashboard/DashBoard';
 import Users from './modules/users/Users';
 import Survey from './modules/survey/Survey';
-import SurveyCreator from './modules/survey/SurveyCreator';
 import CreatorForm from './modules/survey/CreatorForm';
 import SurveyBuilder from './modules/survey/SurveyBuilder';
 
@@ -29,7 +28,7 @@ function App() {
         <Route path='users' element={<Users />}></Route>
         <Route path='surveys/*'>
           <Route path='' element={<Survey />}></Route>
-          <Route path='createSurvey/*' element={<SurveyCreator />}>
+          <Route path='createSurvey/*' >
             <Route path='' element={<CreatorForm />}></Route> 
             <Route path=':id' element={<SurveyBuilder />}></Route>
           </Route>

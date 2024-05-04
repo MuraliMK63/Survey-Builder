@@ -3,6 +3,9 @@ import CreatorImg from '../../assets/images/creator_form.jpeg';
 import SurveyService from "./SurveyService";
 import { useNavigate } from "react-router-dom";
 
+import { Flip, ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 const surveyService = new SurveyService();
 
 export default function CreatorForm() {
@@ -29,24 +32,29 @@ export default function CreatorForm() {
         let surveyCode = e.target.elements[2].value;
         let description = e.target.elements[3].value;
         let author = localStorage.getItem('userid')
-        let payload = {name: surveyName, code: surveyCode, category: category, description: description, author: author}
-        surveyService.addSurvey(payload)
-            .then((res) =>{
-                navigate(res.data.toString())
-            })
+        if (category !== 'Select') {
+            let payload = { name: surveyName, code: surveyCode, category: category, description: description, author: author }
+            surveyService.addSurvey(payload)
+                .then((res) => {
+                    navigate(res.data.toString())
+                })
+        }
+        else{
+            toast.warning("Category Shouldn't be none", {transition: Flip, theme: 'colored'})
+        }
     }
 
     const codeGenerator = (e) => {
         e.preventDefault();
         let categoryName = e.target.selectedOptions[0].textContent;
-        if (categoryName === "Select"){
+        if (categoryName === "Select") {
             setSurveyCode('')
         }
-        else{
-            let payload = { categoryName: categoryName, userName : localStorage.getItem('username')}
+        else {
+            let payload = { categoryName: categoryName, userName: localStorage.getItem('username') }
             surveyService.getSurveyCode(payload)
-            .then((res) => setSurveyCode(res.data))
-            .catch((err) => alert(err))
+                .then((res) => setSurveyCode(res.data))
+                .catch((err) => alert(err))
         }
     }
 
@@ -57,13 +65,14 @@ export default function CreatorForm() {
 
     return (
         <>
+            <ToastContainer />
             <div className="p-2  mb-4">
                 <h3>Surveys</h3>
             </div>
             <div className="w-100 h-75 bg-white rounded ms-1 me-1  p-3 mt-5 overflow-auto">
                 <div className="w-100 h-100 rounded p-3 row m-auto d-flex justify-content-between overflow-auto" style={{ backgroundColor: '#dbdad7' }}>
-                    <div className="col-sm-7 rounded bg-white overflow-auto">
-                        <img src={CreatorImg} alt='creator_img' className="w-100"></img>
+                    <div className="col-sm-7 h-100 rounded bg-white overflow-auto">
+                        <img src={CreatorImg} alt='creator_img' className="w-100 "></img>
                     </div>
                     <div className="col-sm-5 rounded">
                         <div className="ms-2 w-100 h-100 bg-white rounded m-auto p-3">
@@ -82,7 +91,7 @@ export default function CreatorForm() {
                                 </div>
                                 <div className="mb-4">
                                     <label htmlFor="surveyCode" className="form-label">Code:</label>
-                                    <input type="text" className="form-control" id="surveyCode" disabled  value={surveyCode}/>
+                                    <input type="text" className="form-control" id="surveyCode" disabled value={surveyCode} />
                                 </div>
                                 <div className="mb-5">
                                     <label htmlFor="description" className="form-label">Description</label>

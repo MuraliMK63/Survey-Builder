@@ -31,4 +31,5 @@ export default class SurveyService{
     saveSurvey(data){
         return apiService.post('survey/saveSurvey/', data)
     }
+
 }
