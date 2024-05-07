@@ -12,7 +12,7 @@ class GetUserSerializer(serializers.ModelSerializer):
 class AddUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAccount
-        fields = ['username', 'password', 'firstname', 'lastname']
+        fields = ['username', 'password', 'firstname', 'lastname', 'role']
 
 class UserPassSerializer(serializers.Serializer):
     username = serializers.CharField()

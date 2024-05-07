@@ -7,7 +7,7 @@ from .models import Category, Survey
 class AddCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'created_by']
 
 class AddSurveySerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import CreatorImg from '../../assets/images/creator_form.jpeg';
-import SurveyService from "./SurveyService";
 import { useNavigate } from "react-router-dom";
-
 import { Flip, ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+
+
+import CreatorImg from '../../assets/images/creator_form.jpeg';
+import SurveyService from "./SurveyService";
 
 const surveyService = new SurveyService();
 
@@ -72,7 +73,7 @@ export default function CreatorForm() {
             <div className="w-100 h-75 bg-white rounded ms-1 me-1  p-3 mt-5 overflow-auto">
                 <div className="w-100 h-100 rounded p-3 row m-auto d-flex justify-content-between overflow-auto" style={{ backgroundColor: '#dbdad7' }}>
                     <div className="col-sm-7 h-100 rounded bg-white overflow-auto">
-                        <img src={CreatorImg} alt='creator_img' className="w-100 "></img>
+                        <img src={CreatorImg} alt='creator_img' className="w-100 h-100" style={{ objectFit: 'contain' }}></img>
                     </div>
                     <div className="col-sm-5 rounded">
                         <div className="ms-2 w-100 h-100 bg-white rounded m-auto p-3">

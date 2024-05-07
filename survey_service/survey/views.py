@@ -14,9 +14,9 @@ from .models import Survey, Category
 class GetCategoryView(APIView):
     def get(self, request):
         data = Category.objects.all()
-        active = data.filter(is_active = True).values()
-        # inactive = data.filter(is_active = False).values()
-        return Response(active)
+        active = data.filter(is_active = True).values('id', 'name', 'description', createdBy = F('created_by__id'))
+        inactive = data.filter(is_active = False).values()
+        return Response([active, inactive])
 
 class AddCategoryView(generics.GenericAPIView):
     serializer_class = AddCategorySerializer
@@ -25,8 +25,8 @@ class AddCategoryView(generics.GenericAPIView):
         deserializer = self.serializer_class(data = request.data)
         deserializer.is_valid(raise_exception = True)
 
-        name, description = deserializer.validated_data.values()
-        Category.objects.create(name = name, description = description)
+        name, description, created_by = deserializer.validated_data.values()
+        Category.objects.create(name = name, description = description, created_by = created_by)
         return Response('Category Created.')
     
 

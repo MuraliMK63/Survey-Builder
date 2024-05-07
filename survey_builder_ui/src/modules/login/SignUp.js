@@ -22,7 +22,7 @@ export default function SignUp() {
             toast.error('Passwords Should Be Same')
         }
         else {
-            let payload = { username: username, password: password, firstname: firstname, lastname: lastname };
+            let payload = { username: username, password: password, firstname: firstname, lastname: lastname, role: 'User' };
             loginService.addNewUser(payload)
                 .then((res) => {
                     if (res.data === 'User Created.') {

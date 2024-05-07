@@ -12,7 +12,8 @@ const surveyService = new SurveyService();
 
 export default function SurveyBuilder() {
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
     const [surveyDetails, setSurveyDetails] = useState([])
     const [surveyContent, setSurveyContent] = useState([]);
 
@@ -54,9 +55,9 @@ export default function SurveyBuilder() {
     const deleteQuetion = (quesid) => {
         let prevContent = [...surveyContent];
         prevContent.splice(quesid - 1, 1);
-        prevContent.map((ques) => { if (ques.id > quesid){ques.id = ques.id -1}})
+        prevContent.map((ques) => { if (ques.id > quesid) { ques.id = ques.id - 1 } })
         setSurveyContent(prevContent)
-        
+
     }
 
     const editQuestion = (question) => {
@@ -67,8 +68,13 @@ export default function SurveyBuilder() {
     }
 
     const questionContent = surveyContent.map((ques) => {
-        return <QuestionTypes question={ques} delQ={deleteQuetion} edtQ={editQuestion}/>
+        return <QuestionTypes question={ques} delQ={deleteQuetion} edtQ={editQuestion} />
     })
+
+    const assignSurvey = () => {
+        navigate('/admin/surveys/assignSurvey')
+    }
+
 
     return (
         <>
@@ -78,6 +84,7 @@ export default function SurveyBuilder() {
                     <div className="d-flex justify-content-between">
                         <h3>{surveyDetails[0]}</h3>
                         <div>
+                            <button className="btn btn-secondary me-5" onClick={assignSurvey}><i class="bi bi-send-plus h5 me-2"></i>Share</button>
                             <button className="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#questionModal">Add Question</button>
                             <QuestionModal surveyState={surveyContent} surveySetter={setSurveyContent} />
                             <button className="btn btn-md btn-primary" onClick={saveSurvey}>Save</button>
