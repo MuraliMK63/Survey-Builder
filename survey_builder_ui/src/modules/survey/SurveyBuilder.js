@@ -8,6 +8,7 @@ import QuestionTypes from "./QuestionTypes";
 
 
 import SurveyService from './SurveyService';
+import AssignSurvey from "./AssignSurvey";
 const surveyService = new SurveyService();
 
 export default function SurveyBuilder() {
@@ -72,7 +73,7 @@ export default function SurveyBuilder() {
     })
 
     const assignSurvey = () => {
-        navigate('/admin/surveys/assignSurvey')
+        navigate('assignSurvey')
     }
 
 

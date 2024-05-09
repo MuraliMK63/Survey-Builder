@@ -25,4 +25,14 @@ class Survey(models.Model):
     is_active = models.BooleanField(default = True)
     created_date = models.DateTimeField(auto_now_add = True)
     modified_date = models.DateTimeField(auto_now = True)
+
+class AssignedSurvey(models.Model):
+    survey = models.ForeignKey(Survey, on_delete = models.CASCADE)
+    users = models.JSONField()
+    message = models.TextField()
+    duedate = models.DateTimeField()
+    assigned_by = models.ForeignKey(UserAccount, on_delete = models.CASCADE, related_name='assigned_by')
+    modified_by = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
+    assigneddate = models.DateTimeField(auto_now_add = True)
+    lastmodified_date = models.DateTimeField(auto_now = True)
     

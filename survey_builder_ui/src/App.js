@@ -23,37 +23,40 @@ import AssignSurvey from './modules/survey/AssignSurvey';
 function App() {
   return (
     <BrowserRouter>
-    <Routes>
+      <Routes>
 
-      <Route path='' element={<Login />}>
-        <Route path='' element={<SignIn />}></Route>
-        <Route path='signup' element={<SignUp />}></Route>
-      </Route>
+        <Route path='' element={<Login />}>
+          <Route path='' element={<SignIn />}></Route>
+          <Route path='signup' element={<SignUp />}></Route>
+        </Route>
 
-      <Route path='admin/*' element={<AdminHome />}>
-        <Route path='' element={<DashBoard />}></Route>
-        <Route path='users/*' >
-          <Route path='' element={<Users />}></Route>
-          <Route path='createUser' element={<UserCreation />}></Route>
-        </Route>
-        <Route path='category' >
-          <Route path='' element={<Category />}></Route>
-          <Route path='createCategory' element={<CategoryCreation />}></Route>
-        </Route>
-        <Route path='surveys/*'>
-          <Route path='' element={<Survey />}></Route>
-          <Route path='createSurvey/*' >
-            <Route path='' element={<CreatorForm />}></Route> 
-            <Route path=':id' element={<SurveyBuilder />}></Route>
+        <Route path='admin/*' element={<AdminHome />}>
+          <Route path='' element={<DashBoard />}></Route>
+          <Route path='users/*' >
+            <Route path='' element={<Users />}></Route>
+            <Route path='createUser' element={<UserCreation />}></Route>
           </Route>
-          <Route path='assignSurvey' element={<AssignSurvey />}></Route>
+          <Route path='category' >
+            <Route path='' element={<Category />}></Route>
+            <Route path='createCategory' element={<CategoryCreation />}></Route>
+          </Route>
+          <Route path='surveys/*'>
+            <Route path='' element={<Survey />}></Route>
+            <Route path='createSurvey/*' >
+              <Route path='' element={<CreatorForm />}></Route>
+              <Route path=':id/*' >
+                <Route path='' element={<SurveyBuilder />}></Route>
+                <Route path='assignSurvey' element={<AssignSurvey />}></Route>
+              </Route>
+            </Route>
+
+          </Route>
         </Route>
-      </Route>
 
-      <Route path='user' element={<UserHome />}>
+        <Route path='user' element={<UserHome />}>
 
-      </Route>
-    </Routes>
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }

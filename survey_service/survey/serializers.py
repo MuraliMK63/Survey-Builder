@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Category, Survey
+from .models import Category, Survey, AssignedSurvey
 
 # Create your serializers here
 
@@ -23,4 +23,11 @@ class SurveyIdSerializer(serializers.Serializer):
 
 class SaveSurveySerializer(SurveyIdSerializer):
     surveyJson = serializers.JSONField()
+
+class AssignSurveySerializer(serializers.Serializer):
+    surveyId = serializers.IntegerField()
+    message = serializers.CharField()
+    dueDate = serializers.DateTimeField()
+    assignedBy = serializers.IntegerField()
+    users = serializers.JSONField()
 

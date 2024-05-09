@@ -1,5 +1,5 @@
 from rest_framework.urls import path
-from .views import GetCategoryView, GetSurveyView, AddCategoryView, AddSurveyView, GetCodeView, GetSurveyDetailsView, SaveSurveyView
+from .views import GetCategoryView, GetSurveyView, AddCategoryView, AddSurveyView, GetCodeView, GetSurveyDetailsView, SaveSurveyView, AssignSurveyView
 # Create your urls here
 
 urlpatterns = [
@@ -9,5 +9,6 @@ urlpatterns = [
     path('addSurvey/', AddSurveyView.as_view(), name = 'add_survey_view'),
     path('getSurveyCode/', GetCodeView.as_view(), name = 'get_survey_code_view'),
     path('getSurveyDetails/', GetSurveyDetailsView.as_view(), name = 'get_survey_details_view'),
-    path('saveSurvey/', SaveSurveyView.as_view(), name = 'save_survey_view')
+    path('saveSurvey/', SaveSurveyView.as_view(), name = 'save_survey_view'),
+    path('assignSurvey/', AssignSurveyView.as_view(), name = 'assign_survey_view')
 ]

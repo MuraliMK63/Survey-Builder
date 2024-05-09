@@ -6,8 +6,8 @@ from django.db.models import Count, F
 
 import json
 
-from .serializers import AddCategorySerializer, AddSurveySerializer, GetSurveyCodeSerializer, SurveyIdSerializer, SaveSurveySerializer
-from .models import Survey, Category
+from .serializers import AddCategorySerializer, AddSurveySerializer, GetSurveyCodeSerializer, SurveyIdSerializer, SaveSurveySerializer, AssignSurveySerializer
+from .models import Survey, Category, AssignedSurvey
 
 # Create your views here.
 
@@ -96,3 +96,14 @@ class SaveSurveyView(generics.GenericAPIView):
             current_survey.content = survey_json
             current_survey.save()
             return Response('Saved Sucessfully!')
+
+class AssignSurveyView(generics.GenericAPIView):
+    serializer_class = AssignSurveySerializer
+
+    def post(self, request):
+        deserializer = self.serializer_class(data = request.data)
+        deserializer.is_valid(raise_exception = True)
+
+        surveyId, message, dueDate, assignedBy, users = deserializer.validated_data.values()
+        AssignedSurvey.objects.create(survey_id = surveyId, users = users, message = message, duedate = dueDate, assigned_by_id = assignedBy, modified_by_id = assignedBy)
+        return Response ("Assigned Sucessfully.")

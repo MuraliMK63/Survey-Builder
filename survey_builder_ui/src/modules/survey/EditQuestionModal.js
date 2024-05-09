@@ -22,7 +22,7 @@ export default function EditQuestionModal({ question, editQ }) {
             element.options.push(e.target.elements[i].value)
         }
         editQ(element)
-        document.getElementById('editModalClose').click()
+        document.getElementById(`editBtnClose${quesid}`).click()
     }
 
     const addChoice = () => {
@@ -93,8 +93,8 @@ export default function EditQuestionModal({ question, editQ }) {
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" id='editModalClose'>Close</button>
-                            <button type="submit" className="btn btn-primary">Add Question</button>
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" id={`editBtnClose${question.id}`}>Close</button>
+                            <button type="submit" className="btn btn-primary">Edit Question</button>
                         </div>
                     </form>
                 </div>
