@@ -11,4 +11,12 @@ export default class UserService{
     addUser(data){
         return apiService.post('auth/addUser/', data)
     }
+
+    activateUser(data){
+        return apiService.post('auth/activateUser/', data)
+    }
+
+    deactivateUser(data){
+        return apiService.post('auth/deactivateUser/', data)
+    }
 }

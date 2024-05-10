@@ -17,3 +17,6 @@ class AddUserSerializer(serializers.ModelSerializer):
 class UserPassSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
+
+class UserIdListSerializer(serializers.Serializer):
+    userIdList = serializers.JSONField()

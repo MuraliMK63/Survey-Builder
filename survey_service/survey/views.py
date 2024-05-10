@@ -6,7 +6,8 @@ from django.db.models import Count, F
 
 import json
 
-from .serializers import AddCategorySerializer, AddSurveySerializer, GetSurveyCodeSerializer, SurveyIdSerializer, SaveSurveySerializer, AssignSurveySerializer
+from .serializers import AddCategorySerializer, AddSurveySerializer, GetSurveyCodeSerializer, SurveyIdSerializer
+from .serializers import SaveSurveySerializer, AssignSurveySerializer, SurveyIdListSerializer, CategoryIdListSerializer
 from .models import Survey, Category, AssignedSurvey
 
 # Create your views here.
@@ -29,6 +30,35 @@ class AddCategoryView(generics.GenericAPIView):
         Category.objects.create(name = name, description = description, created_by = created_by)
         return Response('Category Created.')
     
+class ActivateCategoryView(generics.GenericAPIView):
+    serializer_class = CategoryIdListSerializer
+
+    def post(self, request):
+        deserializer = self.serializer_class(data = request.data)
+        deserializer.is_valid(raise_exception = True)
+
+        category_ids = deserializer.validated_data['categoryIdList']
+        categories = Category.objects.filter(id__in = category_ids)
+        if categories:
+            categories.update(is_active = True)
+            return Response('Activated Sucessfully.')
+        else:
+            return Response('No Category Found.')
+        
+class DeactivateCategoryView(generics.GenericAPIView):
+    serializer_class = CategoryIdListSerializer
+
+    def post(self, request):
+        deserializer = self.serializer_class(data = request.data)
+        deserializer.is_valid(raise_exception = True)
+
+        category_ids = deserializer.validated_data['categoryIdList']
+        categories = Category.objects.filter(id__in = category_ids)
+        if categories:
+            categories.update(is_active = False)
+            return Response('Deactivated Sucessfully.')
+        else:
+            return Response('No Category Found.')
 
 class GetSurveyView(APIView):
     def get(self, request):
@@ -107,3 +137,34 @@ class AssignSurveyView(generics.GenericAPIView):
         surveyId, message, dueDate, assignedBy, users = deserializer.validated_data.values()
         AssignedSurvey.objects.create(survey_id = surveyId, users = users, message = message, duedate = dueDate, assigned_by_id = assignedBy, modified_by_id = assignedBy)
         return Response ("Assigned Sucessfully.")
+    
+
+class ActivateSurveyView(generics.GenericAPIView):
+    serializer_class = SurveyIdListSerializer
+
+    def post(self, request):
+        deserializer = self.serializer_class(data = request.data)
+        deserializer.is_valid(raise_exception = True)
+
+        survey_ids = deserializer.validated_data['surveyIdList']
+        surveys = Survey.objects.filter(id__in = survey_ids)
+        if surveys:
+            surveys.update(is_active = True)
+            return Response('Activated Sucessfully.')
+        else:
+            return Response('No Surveys Found.')
+        
+class DeactivateSurveyView(generics.GenericAPIView):
+    serializer_class = SurveyIdListSerializer
+
+    def post(self, request):
+        deserializer = self.serializer_class(data = request.data)
+        deserializer.is_valid(raise_exception = True)
+
+        survey_ids = deserializer.validated_data['surveyIdList']
+        surveys = Survey.objects.filter(id__in = survey_ids)
+        if surveys:
+            surveys.update(is_active = False)
+            return Response('Deactivated Sucessfully.')
+        else:
+            return Response('No Surveys Found.')

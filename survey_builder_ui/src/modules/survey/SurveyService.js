@@ -36,4 +36,12 @@ export default class SurveyService{
         return apiService.post('survey/assignSurvey/', data)
     }
 
+    activateSurveys(data){
+        return apiService.post('survey/activateSurvey/', data)
+    }
+
+    deactivateSurveys(data){
+        return apiService.post('survey/deactivateSurvey/', data)
+    }
+
 }

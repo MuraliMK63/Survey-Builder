@@ -12,4 +12,12 @@ export default class CategoryService{
         return apiService.post('survey/addCategory/', data)
     }
 
+    activateCategory(data){
+        return apiService.post('survey/activateCategory/', data)
+    }
+
+    deactivateCategory(data){
+        return apiService.post('survey/deactivateCategory/', data)
+    }
+
 }

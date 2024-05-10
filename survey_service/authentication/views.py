@@ -3,8 +3,8 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from survey_service.encryption import encrypt, decrypt
-from .serializers import AddUserSerializer, UserPassSerializer, GetUserSerializer
+from survey_service.encryption import encrypt
+from .serializers import AddUserSerializer, UserPassSerializer, UserIdListSerializer
 from .models import UserAccount
 
 
@@ -47,3 +47,33 @@ class VerifyUserView(generics.GenericAPIView):
             return Response(user.values().first())
         else:
             return Response("Invalid user.")
+        
+class ActivateUserView(generics.GenericAPIView):
+    serializer_class = UserIdListSerializer
+
+    def post(self, request):
+        deserializer = self.serializer_class(data = request.data)
+        deserializer.is_valid(raise_exception = True)
+        
+        user_ids  = deserializer.validated_data['userIdList']
+        users = UserAccount.objects.filter(id__in = user_ids)
+        if users:
+            users.update(is_active = True)
+            return Response('Activated Sucessfully.')
+        else:
+            return Response('No Users Found.')
+
+class DeactivateUserView(generics.GenericAPIView):
+    serializer_class = UserIdListSerializer
+
+    def post(self, request):
+        deserializer = self.serializer_class(data = request.data)
+        deserializer.is_valid(raise_exception = True)
+        
+        user_ids  = deserializer.validated_data['userIdList']
+        users = UserAccount.objects.filter(id__in = user_ids)
+        if users:
+            users.update(is_active = False)
+            return Response('Deactivated Sucessfully.')
+        else:
+            return Response('No Users Found.')

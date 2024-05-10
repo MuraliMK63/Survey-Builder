@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Flip, ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import UserService from "./UserService";
 
@@ -22,10 +24,61 @@ export default function Users() {
     const switchActive = () => { setCurrentSection(0) };
     const switchInactive = () => { setCurrentSection(1) };
 
+
+    const activateUsers = () => {
+        let tbody = document.getElementById('userTableBody')
+        let selectedRows = []
+
+        for (let iter = 0; iter < tbody.children.length; iter++) {
+            let currentRow = tbody.children[iter].children[0].children[0];
+            if (currentRow.checked) {
+                selectedRows.push(parseInt(currentRow.value))
+            };
+        };
+
+        let payload = { userIdList: selectedRows }
+        userService.activateUser(payload)
+            .then((res) => {
+                if (res.data === 'Activated Sucessfully.'){
+                    window.location.reload(false)
+                }
+                else{
+                    toast.error(res.data, {transition: Flip, theme: 'colored'})
+                }
+            })
+            .catch(err => { alert(err) })
+    }
+
+    const deactivateUsers = () => {
+        let tbody = document.getElementById('userTableBody')
+        let selectedRows = []
+
+        for (let iter = 0; iter < tbody.children.length; iter++) {
+            let currentRow = tbody.children[iter].children[0].children[0];
+            if (currentRow.checked) {
+                selectedRows.push(parseInt(currentRow.value))
+            };
+        };
+
+        let payload = { userIdList: selectedRows }
+        userService.deactivateUser(payload)
+            .then((res) => {
+                if (res.data === 'Deactivated Sucessfully.'){
+                    window.location.reload(false)
+                }
+                else{
+                    toast.error(res.data, {transition: Flip, theme: 'colored'})
+                }
+            })
+            .catch(err => { alert(err) })
+    }
+
+
+
     const activeUsers = active.map((activ, ind) => {
         return (<>
             <tr key={activ.id}  >
-                <td><input type="checkbox" className="form-check-input" id="activeCheck" /></td>
+                <td><input type="checkbox" className="form-check-input" id="activeCheck" value={activ.id}/></td>
                 <td value={activ.id}>{ind + 1}</td>
                 <td>{activ.username}</td>
                 <td>{activ.firstname}</td>
@@ -40,7 +93,7 @@ export default function Users() {
     const inactiveUsers = inactive.map((inactiv, ind) => {
         return (<>
             <tr key={inactiv.id}  >
-                <td><input type="checkbox" className="form-check-input" id="activeCheck" /></td>
+                <td><input type="checkbox" className="form-check-input" id="activeCheck" value={inactiv.id}/></td>
                 <td value={inactiv.id}>{ind + 1}</td>
                 <td>{inactiv.username}</td>
                 <td>{inactiv.firstname}</td>
@@ -54,6 +107,7 @@ export default function Users() {
 
     return (
         <>
+            <ToastContainer />
             <div className="p-2 d-flex justify-content-between mb-4">
                 <h3>Users</h3>
                 <Link to='createUser'><button className="btn btn-primary">Create User</button></Link>
@@ -61,7 +115,9 @@ export default function Users() {
             <div className="w-100 h-75 bg-white rounded mt-4 p-3">
                 <div className="d-flex justify-content-between mb-5 mt-3">
                     <h3>{currentSection === 0 ? 'Active Users' : 'Inactive Users'}</h3>
-                    <button className="btn btn-primary">{currentSection === 0 ? 'Deactivate' : 'Activate'}</button>
+                    <button className="btn btn-primary" onClick={currentSection === 0 ? deactivateUsers : activateUsers}>
+                        {currentSection === 0 ? 'Deactivate' : 'Activate'}
+                    </button>
                 </div>
                 <div className="w-100 h-75  mt-4 rounded p-3" style={{ backgroundColor: '#dbdad7' }}>
                     <div className="row mb-2">
@@ -84,7 +140,7 @@ export default function Users() {
                                         <td>Actions</td>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="userTableBody">
                                     {currentSection === 0 ? activeUsers : inactiveUsers}
                                 </tbody>
                             </table>

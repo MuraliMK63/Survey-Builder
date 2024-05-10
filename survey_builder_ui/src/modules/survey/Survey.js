@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from 'react-router-dom'
 import SurveyService from "./SurveyService";
+import { Flip, ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const surveyService = new SurveyService();
 
@@ -20,20 +22,78 @@ export default function Survey() {
             })
     }, [])
 
+
+
     const activate = () => { setCurrentOption(0) };
     const deactivate = () => { setCurrentOption(1) };
 
-    const showSurvey = (e) =>{
+
+
+    const showSurvey = (e) => {
         let surveyId = e.target.value
         navigate(`createSurvey/${surveyId}`)
     }
 
+
+
+    const activateSurvey = () => {
+        let tbody = document.getElementById('surveyTableBody')
+        let selectedRows = []
+
+        for (let iter = 0; iter < tbody.children.length; iter++) {
+            let currentRow = tbody.children[iter].children[0].children[0];
+            if (currentRow.checked) {
+                selectedRows.push(parseInt(currentRow.value))
+            };
+        };
+        let payload = { surveyIdList: selectedRows }
+        surveyService.activateSurveys(payload)
+            .then((res) => {
+                if (res.data === 'Activated Sucessfully.') {
+                    window.location.reload(false)
+                }
+                else {
+                    toast.error(res.data, { transition: Flip, theme: 'colored' })
+                }
+            })
+            .catch((err) => { alert(err) })
+    }
+
+
+
+    const deactivateSurvey = () => {
+        let tbody = document.getElementById('surveyTableBody')
+        let selectedRows = []
+
+        for (let iter = 0; iter < tbody.children.length; iter++) {
+            let currentRow = tbody.children[iter].children[0].children[0];
+            if (currentRow.checked) {
+                selectedRows.push(parseInt(currentRow.value))
+            };
+        };
+        let payload = { surveyIdList: selectedRows }
+        surveyService.deactivateSurveys(payload)
+            .then((res) => {
+                if (res.data === 'Deactivated Sucessfully.') {
+                    window.location.reload(false)
+                }
+                else {
+                    toast.error(res.data, { transition: Flip, theme: 'colored' })
+                }
+            })
+            .catch((err) => { alert(err) })
+    }
+
+    
+
     let currentSection = currentOption === 0 ? 'Active Surveys' : 'Inactive Surveys'
+
+
 
     const activeSurveys = active.map((activ, ind) => {
         return <>
             <tr key={activ.id}  >
-                <td><input type="checkbox" className="form-check-input" id="activeCheck" /></td>
+                <td><input type="checkbox" className="form-check-input" id="activeCheck" value={activ.id} /></td>
                 <td value={activ.id}>{ind + 1}</td>
                 <td>{activ.name}</td>
                 <td>{activ.code}</td>
@@ -44,10 +104,11 @@ export default function Survey() {
 
     })
 
+
     const InactiveSurveys = inactive.map((inactiv, ind) => {
         return <>
             <tr key={inactiv.id} >
-                <td><input type="checkbox" className="form-check-input" id="inactiveCheck" /></td>
+                <td><input type="checkbox" className="form-check-input" id="inactiveCheck" value={inactiv.id} /></td>
                 <td value={inactiv.id}>{ind + 1}</td>
                 <td>{inactiv.name}</td>
                 <td>{inactiv.code}</td>
@@ -58,8 +119,12 @@ export default function Survey() {
 
     })
 
+
+
+
     return (
         <>
+            <ToastContainer />
             <div className="p-2 d-flex justify-content-between mb-4">
                 <h3>Surveys</h3>
                 <Link to='createSurvey'><button className="btn btn-primary" >Create Survey</button></Link>
@@ -67,7 +132,9 @@ export default function Survey() {
             <div className="w-100 h-75 bg-white rounded mt-4 p-3">
                 <div className="d-flex justify-content-between mb-5 mt-3">
                     <h3>{currentSection}</h3>
-                    <button className="btn btn-primary">{currentOption === 0 ? 'Deactivate' : 'Activate'}</button>
+                    <button className="btn btn-primary" onClick={currentOption === 0 ? deactivateSurvey : activateSurvey}>
+                        {currentOption === 0 ? 'Deactivate' : 'Activate'}
+                    </button>
                 </div>
                 <div className="w-100 h-75  mt-4 rounded p-3" style={{ backgroundColor: '#dbdad7' }}>
                     <div className="row mb-2">
@@ -89,7 +156,7 @@ export default function Survey() {
                                         <td>Actions</td>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="surveyTableBody">
                                     {currentOption === 0 ? activeSurveys : InactiveSurveys}
                                 </tbody>
                             </table>
